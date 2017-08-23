@@ -40,6 +40,7 @@ $log->info('Price:', $price);
 
 $buyPrice = (double)number_format($price['bidPrice'] * (1 - $orderConfig['buyrate'] / 100), 3);
 $sellPrice = (double)number_format($price['askPrice'] * (1 + $orderConfig['sellrate'] / 100), 3);
+$log->info('BuySellPrice:', [$buyPrice, $sellPrice]);
 
 $balance = $api->getBalance();
 $log->info('Balance:', $balance);

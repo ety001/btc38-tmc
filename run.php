@@ -14,7 +14,7 @@ $config = [
     'userid' => getenv('userid'),
     'apiurl' => getenv('apiurl')
 ];
-var_dump($config);
+// var_dump($config);
 
 // create a log channel
 // $log = new Logger('tmc');
@@ -27,3 +27,9 @@ $api = new Api($config);
 // bid -- buy, ask -- sell
 $price = $api->getPrice();
 var_dump($price);
+
+$balance = $api->getBalance();
+var_dump($balance);
+
+$orderList = $api->getOrderList();
+var_dump($orderList);

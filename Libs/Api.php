@@ -7,9 +7,14 @@ class Api
 {
     private $config;
     private $client;
+    private $privateKey;
     public function __construct($config)
     {
         $this->config = $config;
+        $this->privateKey = 
+            $config['key'].'_'
+            .$config['userid'].'_'
+            .$config['skey'].'_';
         $this->client = new Client(['base_uri' => $this->config['apiurl']]);
     }
 
@@ -38,6 +43,72 @@ class Api
                 'bidPrice' => $result['bids'][0][0],
                 'askPrice' => $result['asks'][0][0]
             ];
+        } else {
+            return false;
+        }
+    }
+
+    public function getBalance() {
+        $url = 'getMyBalance.php';
+        $timestamp = time();
+        $postData = [
+            'key' => $this->config['key'],
+            'time' => $timestamp,
+            'md5' => md5($this->privateKey . $timestamp)
+        ];
+        // var_dump($postData);
+        $response = $this->client->post($url, [
+            'form_params' => $postData
+        ]);
+        $code = $response->getStatusCode(); // 200
+        $reason = $response->getReasonPhrase(); // OK
+        $body = $response->getBody();
+        $remainingBytes = $body->getContents();
+        if ($code === 200) {
+            $balances = json_decode($remainingBytes, true);
+            return [
+                'cny_balance' => $balances['cny_balance'],
+                'tmc_balance' => $balances['tmc_balance']
+            ];
+        } else {
+            return false;
+        }
+    }
+
+    public function getOrderList($c='tmc', $mkType='cny') {
+        $url = 'getOrderList.php';
+        $timestamp = time();
+        $postData = [
+            'key' => $this->config['key'],
+            'time' => $timestamp,
+            'md5' => md5($this->privateKey . $timestamp),
+            'mk_type' => $mkType,
+            'coinname' => $c
+        ];
+        // var_dump($postData);
+        $response = $this->client->post($url, [
+            'form_params' => $postData
+        ]);
+        $code = $response->getStatusCode(); // 200
+        $reason = $response->getReasonPhrase(); // OK
+        $body = $response->getBody();
+        $remainingBytes = $body->getContents();
+        $result = [
+            'buy' => [],
+            'sell' => []
+        ];
+        if ($code === 200) {
+            $orderList = json_decode($remainingBytes, true);
+            foreach ($orderList as $k => $order) {
+                if ($order['type'] == 1) {
+                    // buy
+                    array_push($result['buy'], $order);
+                } else if ($order['type'] == 2) {
+                    // sell
+                    array_push($result['sell'], $order);
+                }
+            }
+            return $result;
         } else {
             return false;
         }

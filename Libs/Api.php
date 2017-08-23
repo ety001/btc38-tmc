@@ -99,13 +99,15 @@ class Api
         ];
         if ($code === 200) {
             $orderList = json_decode($remainingBytes, true);
-            foreach ($orderList as $k => $order) {
-                if ($order['type'] == 1) {
-                    // buy
-                    array_push($result['buy'], $order);
-                } else if ($order['type'] == 2) {
-                    // sell
-                    array_push($result['sell'], $order);
+            if ($orderList) {
+                foreach ($orderList as $k => $order) {
+                    if ($order['type'] == 1) {
+                        // buy
+                        array_push($result['buy'], $order);
+                    } else if ($order['type'] == 2) {
+                        // sell
+                        array_push($result['sell'], $order);
+                    }
                 }
             }
             return $result;
@@ -118,7 +120,7 @@ class Api
      * $type: 1buy 2sell
      * $result: succ|123, overBalance
      */
-    public function submitOrder($type=null, $price=null, $amount=null, $coinname=null, $mkType='cny') {
+    public function submitOrder($type=null, $price=null, $amount=null, $coinname='tmc', $mkType='cny') {
         if (!$type || !$price || !$amount || !$coinname) {
             return false;
         }

@@ -1,5 +1,12 @@
 {
     "require": {
-        "vlucas/phpdotenv": "^2.4"
+        "vlucas/phpdotenv": "^2.4",
+        "monolog/monolog": "^1.23",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Libs\\": "Libs/"
+        }
     }
 }

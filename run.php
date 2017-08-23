@@ -33,3 +33,19 @@ var_dump($balance);
 
 $orderList = $api->getOrderList();
 var_dump($orderList);
+
+// buy
+// $price = 4;
+// $amount = 1;
+// $coinname = 'tmc';
+// $result = $api->submitOrder(1, $price, $amount, $coinname);
+
+// sell
+// $price = 14;
+// $amount = 1;
+// $coinname = 'tmc';
+// $result = $api->submitOrder(2, $price, $amount, $coinname);
+
+// cancel order
+// $orderId = '368168415';
+// $result = $api->cancelOrder($orderId);

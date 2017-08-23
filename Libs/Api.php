@@ -113,4 +113,61 @@ class Api
             return false;
         }
     }
+
+    /**
+     * $type: 1buy 2sell
+     * $result: succ|123, overBalance
+     */
+    public function submitOrder($type=null, $price=null, $amount=null, $coinname=null, $mkType='cny') {
+        if (!$type || !$price || !$amount || !$coinname) {
+            return false;
+        }
+        $url = 'submitOrder.php';
+        $timestamp = time();
+        $postData = [
+            'key' => $this->config['key'],
+            'time' => $timestamp,
+            'md5' => md5($this->privateKey . $timestamp),
+            'type' => $type,
+            'mk_type' => $mkType,
+            'price' => $price,
+            'amount' => $amount,
+            'coinname' => $coinname
+        ];
+        // var_dump($postData);
+        $response = $this->client->post($url, [
+            'form_params' => $postData
+        ]);
+        $code = $response->getStatusCode(); // 200
+        $reason = $response->getReasonPhrase(); // OK
+        $body = $response->getBody();
+        $remainingBytes = $body->getContents();
+        $result = explode('|', $remainingBytes);
+        return $result;
+    }
+
+    /**
+     * $result: succ, overtime
+     */
+    public function cancelOrder($orderId=null, $coinname='tmc', $mkType='cny') {
+        $url = 'cancelOrder.php';
+        $timestamp = time();
+        $postData = [
+            'key' => $this->config['key'],
+            'time' => $timestamp,
+            'md5' => md5($this->privateKey . $timestamp),
+            'mk_type' => $mkType,
+            'order_id' => $orderId,
+            'coinname' => $coinname
+        ];
+        // var_dump($postData);
+        $response = $this->client->post($url, [
+            'form_params' => $postData
+        ]);
+        $code = $response->getStatusCode(); // 200
+        $reason = $response->getReasonPhrase(); // OK
+        $body = $response->getBody();
+        $remainingBytes = $body->getContents();
+        return $remainingBytes;
+    }
 }

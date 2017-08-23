@@ -26,7 +26,7 @@ $orderConfig = [
 
 // create a log channel
 $log = new Logger('tmc');
-$log->pushHandler(new StreamHandler('logs/tmc.log', Logger::INFO));
+$log->pushHandler(new StreamHandler(__DIR__.'/logs/tmc.log', Logger::INFO));
 // add records to the log
 $log->info('');
 $log->info('Time:', [date('Y-m-d H:i:s', time())]);

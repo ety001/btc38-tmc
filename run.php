@@ -51,6 +51,7 @@ $log->info('OrderList:', $orderList);
 $result = null;
 if ($orderConfig['maxtmc'] < (double)$balance['tmc_balance']) {
     // 不操作
+    $log->info('maxtmc < tmc_balance');
 } else {
     // 判断是否下买单
     if ($orderConfig['amount'] * $buyPrice <= (double)$balance['cny_balance']) {
@@ -75,6 +76,8 @@ if ($orderConfig['maxtmc'] < (double)$balance['tmc_balance']) {
                     $log->info('BuyNewOrder:', ['price'=>$buyPrice, 'amount'=>$orderConfig['amount']] );
                     $buyResult = $api->submitOrder(1, $buyPrice, $orderConfig['amount']);
                     $log->info('BuyNewOrderResult', [$buyResult]);
+                } else {
+                    $log->info('PriceComparison:', [$buyPrice, (double)$tmp[0]['price']]);
                 }
                 break;
             default:
@@ -95,6 +98,8 @@ if ($orderConfig['maxtmc'] < (double)$balance['tmc_balance']) {
                     $log->info('BuyNewOrder:', ['price'=>$buyPrice, 'amount'=>$orderConfig['amount']] );
                     $buyResult = $api->submitOrder(1, $buyPrice, $orderConfig['amount']);
                     $log->info('BuyNewOrderResult', [$buyResult]);
+                } else {
+                    $log->info('PriceComparison:', [$buyPrice, (double)$nearestOrder['price']]);
                 }
                 break;
         }
@@ -103,6 +108,7 @@ if ($orderConfig['maxtmc'] < (double)$balance['tmc_balance']) {
 
 if ($orderConfig['maxcny'] < (double)$balance['cny_balance']) {
     // 不操作
+    $log->info('maxcny < cny_balance');
 } else {
     // 判断是否下卖单
     if ($orderConfig['amount'] <= (double)$balance['tmc_balance']) {
@@ -127,6 +133,8 @@ if ($orderConfig['maxcny'] < (double)$balance['cny_balance']) {
                     $log->info('SellNewOrder:', ['price'=>$sellPrice, 'amount'=>$orderConfig['amount']] );
                     $sellResult = $api->submitOrder(2, $sellPrice, $orderConfig['amount']);
                     $log->info('SellNewOrderResult', [$sellResult]);
+                } else {
+                    $log->info('PriceComparison:', [$sellPrice, (double)$tmp[0]['price']]);
                 }
                 break;
             default:
@@ -147,6 +155,8 @@ if ($orderConfig['maxcny'] < (double)$balance['cny_balance']) {
                     $log->info('BuyNewOrder:', ['price'=>$sellPrice, 'amount'=>$orderConfig['amount']] );
                     $sellResult = $api->submitOrder(2, $sellPrice, $orderConfig['amount']);
                     $log->info('BuyNewOrderResult', [$sellResult]);
+                } else {
+                    $log->info('PriceComparison:', [$sellPrice, (double)$nearestOrder['price']]);
                 }
                 break;
         }

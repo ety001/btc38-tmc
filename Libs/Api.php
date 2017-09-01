@@ -172,4 +172,31 @@ class Api
         $remainingBytes = $body->getContents();
         return $remainingBytes;
     }
+
+    public function getMyTradeList($page=0, $coinname='tmc', $mkType='cny') {
+        $url = 'getMyTradeList.php';
+        $timestamp = time();
+        $postData = [
+            'key' => $this->config['key'],
+            'time' => $timestamp,
+            'md5' => md5($this->privateKey . $timestamp),
+            'mk_type' => $mkType,
+            'coinname' => $coinname,
+            'page' => $page
+        ];
+        // var_dump($postData);
+        $response = $this->client->post($url, [
+            'form_params' => $postData
+        ]);
+        $code = $response->getStatusCode(); // 200
+        $reason = $response->getReasonPhrase(); // OK
+        $body = $response->getBody();
+        $remainingBytes = $body->getContents();
+        if ($code === 200) {
+            $tradeList = json_decode($remainingBytes, true);
+            return $tradeList;
+        } else {
+            return false;
+        }
+    }
 }

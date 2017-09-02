@@ -36,7 +36,7 @@ $api = new Api($config);
 
 // bid -- buy, ask -- sell
 $price = $api->getPrice();
-$log->info('Price:', $price);
+$log->info('Price:', [$price]);
 
 $buyPrice = (double)number_format($price['bidPrice'] * (1 - $orderConfig['buyrate'] / 100), 3);
 $sellPrice = (double)number_format($price['askPrice'] * (1 + $orderConfig['sellrate'] / 100), 3);
